@@ -1,0 +1,334 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Hypothesis Testing : Bombay Hospitality Ltd."
+      ],
+      "metadata": {
+        "id": "Muh_SDIKGJGt"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 1: Problem Background & Hypotheses\n",
+        "### Background:\n",
+        "##### Bombay Hospitality Ltd. uses the cost model:\n",
+        "##### W = 1000 + 5X\n",
+        "##### where X is the number of units produced in a week.\n",
+        "##### Restaurant owners claim the actual operating costs are higher.\n",
+        "\n",
+        "### Hypotheses:\n",
+        "##### H0: μ = 1000 + 5*X (Model is correct)\n",
+        "##### H1: μ > 1000 + 5*X (Costs are higher than model prediction)"
+      ],
+      "metadata": {
+        "id": "TSq7edsYGZhM"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 2: Import Libraries"
+      ],
+      "metadata": {
+        "id": "Q-UYmAgvHNbL"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 2,
+      "metadata": {
+        "id": "7lKkyJDsGE79"
+      },
+      "outputs": [],
+      "source": [
+        "import math\n",
+        "from scipy.stats import norm"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 3: Given Data"
+      ],
+      "metadata": {
+        "id": "t4ypdMEcHnak"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sample_mean = 3050   # x̄ = sample mean weekly cost\n",
+        "n = 25               # sample size\n",
+        "X_mean = 600         # mean units produced\n",
+        "X_sd = 25            # std. dev. of units produced\n",
+        "\n",
+        "# Theoretical mean weekly cost from model\n",
+        "theoretical_mean = 1000 + 5 * X_mean\n",
+        "theoretical_mean"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "lEZusYp_HeZE",
+        "outputId": "3618e249-bc5e-4ea3-80ee-75d615302395"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "4000"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 4: Calculate Sigma & Standard Error"
+      ],
+      "metadata": {
+        "id": "eT0RAtUWH3Py"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sigma = 5 * X_sd                   # Standard deviation of weekly costs\n",
+        "se = sigma / math.sqrt(n)          # Standard error of mean\n",
+        "\n",
+        "sigma, se"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "XnmVgpKfHzip",
+        "outputId": "1208e586-a233-4bee-b438-936102448659"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(125, 25.0)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 5: Test Statistic"
+      ],
+      "metadata": {
+        "id": "s-OnokMCIeYo"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "z = (sample_mean - theoretical_mean) / se\n",
+        "z"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xlca-LbKIZ8p",
+        "outputId": "3fa06b8e-e733-402a-fd80-7cc665e8e86b"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "-38.0"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 6: Critical Value"
+      ],
+      "metadata": {
+        "id": "9XPopGH1Im67"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "alpha = 0.05\n",
+        "z_critical = norm.ppf(1 - alpha)   # One-tailed test\n",
+        "z_critical"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "wrnC_4dwIjcY",
+        "outputId": "71421330-a80c-477f-b829-ed20e8edbe49"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "np.float64(1.6448536269514722)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 7: Decision"
+      ],
+      "metadata": {
+        "id": "65drWoEkIvou"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "if z > z_critical:\n",
+        "    decision = \"Reject H0\"\n",
+        "else:\n",
+        "    decision = \"Fail to Reject H0\"\n",
+        "\n",
+        "decision"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        },
+        "id": "ZCuSzpgeIqpL",
+        "outputId": "7d069f1d-de73-4db5-b636-14e63a1da9fe"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'Fail to Reject H0'"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            }
+          },
+          "metadata": {},
+          "execution_count": 8
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 8: Conclusion"
+      ],
+      "metadata": {
+        "id": "2FBbU5BHI-BM"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "if decision == \"Reject H0\":\n",
+        "    conclusion = (\"There is strong evidence at the 5% significance level \"\n",
+        "                  \"to support the restaurant owners' claim that weekly operating \"\n",
+        "                  \"costs are higher than predicted by the model.\")\n",
+        "else:\n",
+        "    conclusion = (\"There is not enough evidence at the 5% significance level \"\n",
+        "                  \"to support the restaurant owners' claim that weekly operating \"\n",
+        "                  \"costs are higher than predicted by the model.\\n\\n\"\n",
+        "                  f\"Note: The sample mean ({sample_mean}) is actually LOWER \"\n",
+        "                  f\"than the model’s prediction ({theoretical_mean}).\")\n",
+        "\n",
+        "conclusion"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 53
+        },
+        "id": "nIbb3o9EI3ic",
+        "outputId": "1aba1908-c950-444d-8198-9f38228fe99a"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "\"There is not enough evidence at the 5% significance level to support the restaurant owners' claim that weekly operating costs are higher than predicted by the model.\\n\\nNote: The sample mean (3050) is actually LOWER than the model’s prediction (4000).\""
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            }
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Output Highlights:\n",
+        "* Theoretical Mean = 4000\n",
+        "\n",
+        "* σ = 125, SE = 25\n",
+        "\n",
+        "* Test Statistic (z) = -38.0\n",
+        "\n",
+        "* Critical Value = 1.645\n",
+        "\n",
+        "* Decision = Fail to Reject H0\n",
+        "\n",
+        "* Conclusion: No evidence that costs are higher; in fact, costs appear lower than the model predicts.\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "xhyNaKJ9JPe5"
+      }
+    }
+  ]
+}
